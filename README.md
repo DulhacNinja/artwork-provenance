@@ -40,7 +40,7 @@ The application serves as both a data management platform and a research tool fo
 ### 📷 Screenshots
 
 **Romanian Heritage Page**
-![Romanian List](./asstes/romanian.png)
+![Romanian List](./assets/romanian.png)
 
 **Artworks List Page**
 ![Artworks List](./assets/artwork_list.png)
