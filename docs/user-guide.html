@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artwork Provenance Platform - User's Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #0056b3;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+        }
+        
+        h3 {
+            color: #333;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .screenshot-placeholder {
+            background: #e9ecef;
+            border: 2px dashed #007bff;
+            border-radius: 8px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .screenshot-label {
+            color: #0056b3;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .button-description {
+            background: #f8f9fa;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .button-name {
+            font-weight: bold;
+            color: #28a745;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .feature-list {
+            background: #f0f7ff;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        
+        .feature-list li {
+            list-style: none;
+            margin-left: 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #007bff;
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        td {
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #856404;
+        }
+        
+        .tip {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            color: #155724;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        
+        .page-ref {
+            font-style: italic;
+            color: #007bff;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+        
+        .nav-menu {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Artwork Provenance Platform</h1>
+            <p class="subtitle">User's Guide</p>
+            <p style="margin-top: 15px; color: #666;">A Comprehensive Guide to Exploring Digital Artwork Data and Historical Provenance Information</p>
+        </header>
+
+        <!-- Introduction Section -->
+        <div class="section">
+            <h2>1. Introduction</h2>
+            <p>
+                The Artwork Provenance Platform is an innovative digital resource designed to provide researchers, scholars, 
+                and cultural heritage professionals with comprehensive access to artwork metadata, provenance information, and 
+                historical enrichment data. The platform integrates data from multiple authoritative sources including Wikidata 
+                and the Getty Vocabularies, offering users a unified interface for discovering and analyzing artworks.
+            </p>
+            <p>
+                This guide provides step-by-step instructions for navigating the platform's core features, understanding available 
+                tools, and effectively utilizing the system for research purposes.
+            </p>
+        </div>
+
+        <!-- Platform Overview -->
+        <div class="section">
+            <h2>2. Platform Overview</h2>
+            <p>
+                The Artwork Provenance Platform consists of four primary modules, each accessible through the main navigation menu:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Artworks List</strong> - Browse and paginate through the complete artwork database</li>
+                    <li><strong>Statistics</strong> - View aggregated statistical data about artworks, artists, and museums</li>
+                    <li><strong>SPARQL Endpoint</strong> - Execute advanced semantic queries against the linked data</li>
+                    <li><strong>Romanian Heritage</strong> - Access curated data on Romanian cultural patrimony</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Navigation Structure -->
+        <div class="section">
+            <h2>3. Navigation and Primary Controls</h2>
+            
+            <h3>3.1 Main Navigation Menu</h3>
+            <p>
+                The navigation menu appears consistently across all pages of the platform, located at the top of the interface. 
+                This provides users with quick access to all major sections of the application.
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Navigation Item</th>
+                        <th>Icon</th>
+                        <th>Destination</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>List of Works</td>
+                        <td>Home</td>
+                        <td>Main Artworks Page</td>
+                        <td>Browse paginated artwork records</td>
+                    </tr>
+                    <tr>
+                        <td>View Statistics</td>
+                        <td>📊</td>
+                        <td>Statistics Page</td>
+                        <td>Analyze aggregated data and trends</td>
+                    </tr>
+                    <tr>
+                        <td>SPARQL Endpoint</td>
+                        <td>🔗</td>
+                        <td>SPARQL Query Interface</td>
+                        <td>Execute custom semantic queries</td>
+                    </tr>
+                    <tr>
+                        <td>Romanian Heritage</td>
+                        <td>🇷🇴</td>
+                        <td>Romanian Patrimony Page</td>
+                        <td>View Romanian cultural artworks</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Artworks List Module -->
+        <div class="section">
+            <h2>4. Artworks List Module</h2>
+            
+            <p>
+                The Artworks List is the primary browsing interface for the platform. It presents artwork records in a paginated 
+                format, with each page containing up to 20 items for optimal viewing experience.
+            </p>
+            
+            <h3>4.1 Browsing Artworks</h3>
+            <p>
+                Upon accessing the Artworks List, the system automatically loads the first page of records. Each artwork entry 
+                displays the following information:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li>Artwork thumbnail image (with lazy-loading for performance)</li>
+                    <li>Artwork title</li>
+                    <li>Creator/artist name</li>
+                    <li>Date of creation</li>
+                    <li>Museum/institutional holding location</li>
+                    <li>Artistic movement or style classification</li>
+                    <li>Enriched data from DBpedia: artist birth date, birthplace, nationality, and artistic movements</li>
+                </ul>
+            </div>
+            
+            <div class="screenshot-placeholder">
+                <img src="./assets_userguide/pagination.png" alt="Artworks List Interface with Pagination and Artwork Details" style="max-width:100%; height:auto;">
+                <div class="screenshot-label">Figure 2: Artworks List Interface with Pagination and Artwork Details</div>
+            </div>
+            
+            <h3>4.2 Pagination Controls</h3>
+            <p>
+                Navigation between pages is facilitated by two buttons located above and below the artwork list:
+            </p>
+            
+            <div class="button-description">
+                <span class="button-name">← Anterior (Previous)</span> - Navigate to the previous page of results. 
+                This button is disabled when viewing the first page.
+            </div>
+            
+            <div class="button-description">
+                <span class="button-name">Următor → (Next)</span> - Navigate to the next page of results. 
+                This button is disabled when viewing the final page.
+            </div>
+            
+            <p>
+                The pagination header displays the current page number, total number of pages, and total artwork count in the database.
+            </p>
+            
+            <div class="tip">
+                <strong>Tip:</strong> The system automatically scrolls to the top of the page when navigation occurs, ensuring 
+                the new content is immediately visible.
+            </div>
+        </div>
+
+        <!-- Statistics Module -->
+        <div class="section">
+            <h2>5. Statistics Module</h2>
+            
+            <p>
+                The Statistics Module provides aggregated data and analytical insights about the platform's artwork collection. 
+                This module is designed for researchers seeking quantitative overviews and comparative analyses.
+            </p>
+            
+            <h3>5.1 Available Statistical Views</h3>
+            <p>
+                The Statistics page presents multiple data tables and visualizations, including:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Museum Distribution</strong> - Tabular breakdown of artworks by institutional repository</li>
+                    <li><strong>Artist Analysis</strong> - Aggregate statistics on creator/artist representation</li>
+                    <li><strong>Artistic Movement Data</strong> - Classification and frequency of artistic movements in the collection</li>
+                    <li><strong>Historical Period Analysis</strong> - Temporal distribution of artworks across centuries and epochs</li>
+                </ul>
+            </div>
+            
+            <div class="screenshot-placeholder">
+                <img src="./assets_userguide/statistics_page.png" alt="Statistics Module with Aggregated Data Tables" style="max-width:100%; height:auto;">
+                <div class="screenshot-label">Figure 3: Statistics Module with Aggregated Data Tables</div>
+            </div>
+            
+            <div class="note">
+                <strong>Note:</strong> All statistical data is computed from the current database snapshot. For the most up-to-date 
+                information, ensure the database has been recently synchronized with source data repositories.
+            </div>
+        </div>
+
+        <!-- SPARQL Endpoint -->
+        <div class="section">
+            <h2>6. SPARQL Endpoint Module</h2>
+            
+            <p>
+                The SPARQL Endpoint provides advanced users with the capability to execute custom semantic queries directly 
+                against the platform's linked data. This module is designed for researchers with knowledge of SPARQL query language.
+            </p>
+            
+            <h3>6.1 Query Interface</h3>
+            <p>
+                The SPARQL interface consists of a text area input field where users may enter SPARQL queries. A default template 
+                query is provided as reference.
+            </p>
+            
+            <div class="screenshot-placeholder">
+                <img src="./assets_userguide/sparql_before_query.png" alt="SPARQL Query Interface and Input Area" style="max-width:100%; height:auto;">
+                <div class="screenshot-label">Figure 4: SPARQL Query Interface and Input Area</div>
+            </div>
+            
+            <h3>6.2 Primary Control</h3>
+            
+            <div class="button-description">
+                <span class="button-name">▶ Executa Query (Execute Query)</span> - Submits the SPARQL query for execution 
+                against the endpoint. Results are displayed in JSON format below the input area.
+            </div>
+            
+            <h3>6.3 Example Queries</h3>
+            <p>
+                The platform provides five pre-constructed SPARQL query examples to assist users. These examples are presented 
+                in collapsible sections below the query input area and can be loaded into the input field by clicking on them.
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Query Name</th>
+                        <th>Purpose</th>
+                        <th>Returns</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>All Artworks (First 10)</td>
+                        <td>Basic query to retrieve artwork records</td>
+                        <td>Title, creator, date information</td>
+                    </tr>
+                    <tr>
+                        <td>Artworks per Artist</td>
+                        <td>Count and aggregate by creator</td>
+                        <td>Creator name and associated artwork count</td>
+                    </tr>
+                    <tr>
+                        <td>Works by Artistic Movement</td>
+                        <td>Filter by style or movement</td>
+                        <td>Title, creator, movement classification</td>
+                    </tr>
+                    <tr>
+                        <td>Works by Museum</td>
+                        <td>Filter by institutional holding</td>
+                        <td>Title, creator, museum location</td>
+                    </tr>
+                    <tr>
+                        <td>Works by Century</td>
+                        <td>Temporal filtering (e.g., 17th century)</td>
+                        <td>Title, creator, creation date</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="screenshot-placeholder">
+                <img src="./assets_userguide/sparql_after_query.png" alt="SPARQL Example Queries and Results Display" style="max-width:100%; height:auto;">
+                <div class="screenshot-label">Figure 5: SPARQL Example Queries and Results Display</div>
+            </div>
+            
+            <div class="note">
+                <strong>Query Format:</strong> All example queries follow the SPARQL standard specification. The ontology 
+                uses the <code>ex:</code> namespace prefix for custom artwork properties.
+            </div>
+        </div>
+
+        <!-- Romanian Heritage Module -->
+        <div class="section">
+            <h2>7. Romanian Heritage Module</h2>
+            
+            <p>
+                The Romanian Heritage Module provides a specialized interface for accessing artworks related to Romanian cultural 
+                patrimony. This module aggregates artworks by multiple criteria relevant to Romanian heritage studies.
+            </p>
+            
+            <h3>7.1 Content Scope</h3>
+            <p>
+                The Romanian Heritage section includes:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li>Artworks physically located in Romania</li>
+                    <li>Artworks created by artists of Romanian nationality</li>
+                    <li>Artworks by artists born in Romania</li>
+                    <li>Historical and contemporary works relevant to Romanian cultural history</li>
+                </ul>
+            </div>
+            
+            <h3>7.2 Module Features</h3>
+            <p>
+                The Romanian Heritage interface presents three primary elements:
+            </p>
+            
+            <h3>7.2.1 Informational Section</h3>
+            <p>
+                An introductory panel explains the scope of the Romanian Heritage collection and provides links to external 
+                authoritative sources such as data.gov.ro for more comprehensive heritage databases.
+            </p>
+            
+            <h3>7.2.2 Statistical Summary</h3>
+            <p>
+                Key statistics are displayed in a grid format, including:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Total Artworks</strong> - Count of all Romanian heritage works in the database</li>
+                    <li><strong>Distinct Creators</strong> - Number of individual artists represented</li>
+                    <li><strong>Institutional Holdings</strong> - Number of unique museums and repositories</li>
+                </ul>
+            </div>
+            
+            <h3>7.2.3 Artwork Grid Display</h3>
+            <p>
+                Artworks are presented in a responsive grid layout with individual cards displaying essential metadata 
+                for each work.
+            </p>
+            
+            <div class="screenshot-placeholder">
+                <img src="./assets_userguide/romanian_tiles.png" alt="Romanian Heritage Module with Statistics and Artwork Cards" style="max-width:100%; height:auto;">
+                <div class="screenshot-label">Figure 6: Romanian Heritage Module with Statistics and Artwork Cards</div>
+            </div>
+        </div>
+
+        <!-- Data Integration -->
+        <div class="section">
+            <h2>8. Data Sources and Integration</h2>
+            
+            <p>
+                The Artwork Provenance Platform integrates data from multiple authoritative sources:
+            </p>
+            
+            <h3>8.1 Primary Data Sources</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Content</th>
+                        <th>Enrichment Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Wikidata</td>
+                        <td>Artwork records and basic metadata</td>
+                        <td>Collaborative, crowdsourced knowledge base</td>
+                    </tr>
+                    <tr>
+                        <td>DBpedia</td>
+                        <td>Artist biographical information</td>
+                        <td>Birth dates, birthplaces, nationalities, artistic movements</td>
+                    </tr>
+                    <tr>
+                        <td>Getty Vocabularies</td>
+                        <td>Controlled vocabulary and classification data</td>
+                        <td>AAT (Art & Architecture Thesaurus), ULAN (Union List of Artist Names)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tip">
+                <strong>Research Note:</strong> Users should verify artwork attribution and metadata through primary sources, 
+                especially when information appears incomplete or inconsistent across sources.
+            </div>
+        </div>
+
+        <!-- Search and Discovery -->
+        <div class="section">
+            <h2>9. Data Discovery Workflow</h2>
+            
+            <h3>9.1 Typical Research Workflows</h3>
+            
+            <h3>9.1.1 General Browsing</h3>
+            <ol>
+                <li>Access the Artworks List from the main navigation</li>
+                <li>Review artwork cards on each page</li>
+                <li>Use pagination controls to advance through the collection</li>
+                <li>Observe metadata enrichment from DBpedia (artist biographical data)</li>
+            </ol>
+            
+            <h3>9.1.2 Statistical Analysis</h3>
+            <ol>
+                <li>Navigate to the Statistics module</li>
+                <li>Review aggregated data tables</li>
+                <li>Identify distribution patterns and trends</li>
+                <li>Note artist and museum representation frequencies</li>
+            </ol>
+            
+            <h3>9.1.3 Advanced Semantic Querying</h3>
+            <ol>
+                <li>Access the SPARQL Endpoint</li>
+                <li>Select or construct a SPARQL query</li>
+                <li>Execute the query</li>
+                <li>Review results in JSON format</li>
+                <li>Export or analyze results for research purposes</li>
+            </ol>
+            
+            <h3>9.1.4 Romanian Cultural Heritage Research</h3>
+            <ol>
+                <li>Navigate to the Romanian Heritage module</li>
+                <li>Review statistical summaries</li>
+                <li>Browse artwork cards in the grid display</li>
+                <li>Consult external sources (data.gov.ro) for additional information</li>
+            </ol>
+        </div>
+
+        <!-- Accessibility and Performance -->
+        <div class="section">
+            <h2>10. Technical Considerations</h2>
+            
+            <h3>10.1 Performance Optimization</h3>
+            <p>
+                The platform implements several optimizations for enhanced user experience:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li><strong>Lazy Loading Images</strong> - Artwork thumbnails load only when visible in viewport</li>
+                    <li><strong>Pagination (20 items per page)</strong> - Reduces page load time and improves responsiveness</li>
+                    <li><strong>Responsive Design</strong> - Interface adapts to various screen sizes and devices</li>
+                    <li><strong>Asynchronous Data Fetching</strong> - SPARQL queries and API calls execute without blocking user interaction</li>
+                </ul>
+            </div>
+            
+            <h3>10.2 Browser Compatibility</h3>
+            <p>
+                The platform is designed for modern web browsers. For optimal experience, use:
+            </p>
+            
+            <div class="feature-list">
+                <ul>
+                    <li>Chrome/Chromium (version 90+)</li>
+                    <li>Firefox (version 88+)</li>
+                    <li>Safari (version 14+)</li>
+                    <li>Edge (version 90+)</li>
+                </ul>
+            </div>
+            
+            <h3>10.3 Data Currency</h3>
+            <p>
+                Artwork metadata reflects the most recent synchronization with source repositories. Database updates 
+                occur periodically; consult system documentation for update frequency.
+            </p>
+        </div>
+
+        <!-- Best Practices -->
+        <div class="section">
+            <h2>11. Best Practices for Research</h2>
+            
+            <div class="tip">
+                <strong>1. Verify Information:</strong> Cross-reference artwork details with museum catalogs and scholarly sources, 
+                especially for attribution and dating.
+            </div>
+            
+            <div class="tip">
+                <strong>2. Use SPARQL for Complex Analysis:</strong> When conducting large-scale studies, use the SPARQL endpoint 
+                to generate structured datasets rather than manual browsing.
+            </div>
+            
+            <div class="tip">
+                <strong>3. Document Your Queries:</strong> When using SPARQL, preserve queries for reproducibility and citation purposes.
+            </div>
+            
+            <div class="tip">
+                <strong>4. Check Data Completeness:</strong> Note that biographical information (birth dates, birthplaces) may be 
+                incomplete for some artists. Flag missing data when relevant to your research.
+            </div>
+            
+            <div class="tip">
+                <strong>5. Citation Practice:</strong> When citing data from the platform, reference both the platform and the 
+                underlying data sources (Wikidata, DBpedia, Getty Vocabularies).
+            </div>
+        </div>
+
+        <!-- Support and Contact -->
+        <div class="section">
+            <h2>12. Technical Support</h2>
+            
+            <div class="note">
+                <strong>Reporting Issues:</strong> If you encounter technical difficulties or notice data inconsistencies, 
+                please contact the platform administrators with details of the issue, including affected artwork records or 
+                query parameters.
+            </div>
+            
+            <h3>12.1 Common Issues</h3>
+            
+            <h3>Images Not Loading</h3>
+            <p>
+                If artwork images fail to display, this may indicate the source URL is no longer valid. The system gracefully 
+                hides broken images. Proceed with metadata available as text.
+            </p>
+            
+            <h3>SPARQL Query Errors</h3>
+            <p>
+                Verify query syntax follows SPARQL standards and that the ontology namespace prefixes match those defined 
+                in the endpoint documentation.
+            </p>
+            
+            <h3>Pagination Issues</h3>
+            <p>
+                If pagination controls are unresponsive, clear browser cache and reload the page.
+            </p>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="section">
+            <h2>13. Conclusion</h2>
+            
+            <p>
+                The Artwork Provenance Platform provides researchers and cultural heritage professionals with a comprehensive, 
+                integrated resource for discovering and analyzing artwork metadata. Through its intuitive browsing interface, 
+                statistical analysis tools, and advanced semantic querying capabilities, the platform supports both exploratory 
+                research and systematic data analysis.
+            </p>
+            
+            <p>
+                This user's guide has presented the core features and workflows supported by the platform. For more detailed 
+                technical documentation, consult the API specification and architecture documentation.
+            </p>
+        </div>
+
+        <footer>
+            <p>
+                <strong>Artwork Provenance Platform - User's Guide</strong><br>
+                Version 1.0 | January 2026<br>
+                Designed for scholarly research and cultural heritage exploration
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
