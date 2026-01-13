@@ -28,6 +28,19 @@ This document provides the complete REST API specification for the Artwork Prove
 
 ---
 
+## OpenAPI Specification
+
+This project includes an **OpenAPI 3.0.3 specification** (`openapi.yaml`) for machine-readable API documentation.
+
+### Using with Swagger Editor:
+1. Open https://editor.swagger.io
+2. Copy contents from `api-specification/openapi.yaml`
+3. Paste in editor → Interactive UI with "Try it out" buttons
+
+### Using with Postman:
+1. Import → File → Select `openapi.yaml`
+2. Postman generates all requests automatically
+
 ## API Endpoints
 
 ### Summary Table
@@ -2445,4 +2458,5 @@ ORDER BY ?century
 **Last Updated:** January 13, 2026  
 **API Version:** 1.0  
 **Author:** Team -> Machine Love (Dulhac Alexandru and Ignat Vlad-Rovin)
+
 
