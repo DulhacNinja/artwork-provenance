@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Report: Artwork Provenance System — Data Models and Knowledge Integration</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.7;
+            color: #222;
+            background: #f9f9f9;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+        header {
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #1a5276;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .metadata {
+            font-size: 0.95rem;
+            color: #555;
+            font-style: italic;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        h3 {
+            font-size: 1.2rem;
+            color: #34495e;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        h4 {
+            font-size: 1.05rem;
+            color: #555;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        ul, ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+        li {
+            margin-bottom: 0.5rem;
+        }
+        .model-definition {
+            background: #ecf0f1;
+            border-left: 4px solid #2c3e50;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 3px;
+        }
+        .attribute-list {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        .attribute-list strong {
+            color: #2c3e50;
+        }
+        .attribute-item {
+            margin-bottom: 0.75rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .diagram {
+            background: #f0f8ff;
+            border: 1px solid #b0d4ff;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 3px;
+        }
+        .note strong {
+            color: #856404;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        th {
+            background: #ecf0f1;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .section-number {
+            color: #7f8c8d;
+            font-weight: 600;
+        }
+        footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 3px;
+            margin-bottom: 2rem;
+        }
+        .toc h3 {
+            margin-top: 0;
+        }
+        .toc ul {
+            margin: 0.5rem 0 0 2rem;
+        }
+        .toc a {
+            color: #1a5276;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Technical Report: Artwork Provenance System</h1>
+            <p class="metadata">Internal Data Structures, Models, and Knowledge Integration Architecture</p>
+            <p class="metadata">January 13, 2026</p>
+        </header>
+
+        <div class="toc">
+            <h3>Contents</h3>
+            <ul>
+                <li><a href="#abstract">Abstract</a></li>
+                <li><a href="#section1">1. Introduction and System Overview</a></li>
+                <li><a href="#section2">2. Internal Data Structures and Domain Models</a>
+                    <ul>
+                        <li><a href="#section2.1">2.1 Relational Data Model (Django ORM)</a></li>
+                        <li><a href="#section2.2">2.2 Core Entity Models</a></li>
+                        <li><a href="#section2.3">2.3 Knowledge Base Integration Models</a></li>
+                        <li><a href="#section2.4">2.4 Data Mapping and Normalization</a></li>
+                        <li><a href="#section2.5">2.5 Indexing and Performance Optimization</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section3">3. REST API Technical Aspects</a>
+                    <ul>
+                        <li><a href="#section3.1">3.1 API Architecture and Endpoint Design</a></li>
+                        <li><a href="#section3.2">3.2 API Response Format and Pagination</a></li>
+                        <li><a href="#section3.3">3.3 SPARQL Endpoint Integration</a></li>
+                        <li><a href="#section3.4">3.4 Error Handling and Response Patterns</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section4">4. RDF-Based Knowledge Model</a>
+                    <ul>
+                        <li><a href="#section4.1">4.1 Vocabulary Selection and Justification</a></li>
+                        <li><a href="#section4.2">4.2 Dublin Core (DCTERMS) for Descriptive Metadata</a></li>
+                        <li><a href="#section4.3">4.3 OWL for Entity Linking</a></li>
+                        <li><a href="#section4.4">4.4 SKOS for Controlled Vocabularies</a></li>
+                        <li><a href="#section4.5">4.5 Semantic Mapping and Expressiveness</a></li>
+                        <li><a href="#section4.6">4.6 Practical Trade-offs and Design Decisions</a></li>
+                    </ul>
+                </li>
+                <li><a href="#section5">5. External Knowledge Sources and Linked Data Integration</a>
+                    <ul>
+                        <li><a href="#section5.1">5.1 External Knowledge Bases Overview</a></li>
+                        <li><a href="#section5.2">5.2 DBpedia Artist Enrichment</a></li>
+                        <li><a href="#section5.3">5.3 Wikidata Discovery and Linking</a></li>
+                        <li><a href="#section5.4">5.4 Getty Vocabularies (ULAN, AAT)</a></li>
+                        <li><a href="#section5.5">5.5 Representative SPARQL Queries</a></li>
+                        <li><a href="#section5.6">5.6 Linked Data Principles Conformance</a></li>
+                        <li><a href="#section5.7">5.7 Caching and Performance Optimization</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <section id="abstract">
+            <h2><span class="section-number">Abstract</span></h2>
+            <p>
+                This report documents the Artwork Provenance System's technical architecture across four key dimensions: (1) <strong>internal data structures</strong> using a hybrid relational and RDF model, (2) <strong>REST APIs</strong> for data access and querying, (3) <strong>RDF knowledge model</strong> based on established vocabularies (DCTERMS, OWL, SKOS), and (4) <strong>integration with external sources</strong> (DBpedia, Wikidata, Getty vocabularies) following Linked Data principles.
+            </p>
+        </section>
+
+        <section id="section1">
+            <h2><span class="section-number">1.</span> Introduction and System Overview</h2>
+            
+            <h3><span class="section-number">1.1</span> System Purpose</h3>
+            <p>
+                The Artwork Provenance System manages artwork metadata from multiple sources (Wikidata, DBpedia, data.gov.ro, Getty vocabularies), enriches incomplete records through external knowledge bases, and exposes the data via REST APIs and SPARQL endpoints compliant with Linked Data principles.
+            </p>
+
+            <h3><span class="section-number">1.2</span> Architecture</h3>
+            <p>
+                The system uses a hybrid architecture with two storage layers:
+            </p>
+            <ul>
+                <li><strong>Relational Layer:</strong> SQLite with Django ORM for transactional consistency, efficient filtering, and CRUD operations.</li>
+                <li><strong>Semantic Layer:</strong> Apache Jena Fuseki RDF store for graph-based queries, provenance tracking, and linked data interoperability.</li>
+            </ul>
+            <p>
+                Both layers are kept synchronized through bidirectional mapping mechanisms, ensuring semantic equivalence while respecting each paradigm's strengths.
+            </p>
+
+            <h3><span class="section-number">1.3</span> Report Scope</h3>
+            <p>
+                This report covers:
+            </p>
+            <ul>
+                <li><strong>Section 2:</strong> Internal data structures, models, and database schema design.</li>
+                <li><strong>Section 3:</strong> REST API endpoints and request/response patterns.</li>
+                <li><strong>Section 4:</strong> RDF knowledge model, vocabulary choices, and semantic mapping.</li>
+                <li><strong>Section 5:</strong> External knowledge sources, SPARQL queries, and Linked Data compliance.</li>
+            </ul>
+        </section>
+
+        <section id="section2">
+            <h2><span class="section-number">2.</span> Internal Data Structures and Domain Models</h2>
+            
+            <section id="section2.1">
+                <h3><span class="section-number">2.1</span> Relational Data Model (Django ORM)</h3>
+                <p>
+                    The relational data model forms the primary transactional backbone of the system, implementing the Django Object-Relational Mapping (ORM) framework. Django models in the <code>artworks</code> application define the following core entities and their relationships.
+                </p>
+                
+                <h4>2.1.1 Design Philosophy</h4>
+                <p>
+                    The relational schema follows a normalized design optimized for:
+                </p>
+                <ul>
+                    <li><strong>Query Performance:</strong> Strategic use of database indices on frequently filtered and searched attributes.</li>
+                    <li><strong>Data Integrity:</strong> Enforcement of uniqueness constraints and referential integrity through primary and foreign keys.</li>
+                    <li><strong>Temporal Tracking:</strong> Automatic timestamp capture (<code>auto_now_add=True</code>) for audit trails and data provenance.</li>
+                    <li><strong>Flexibility:</strong> Nullable fields for optional metadata to accommodate incomplete data from multiple sources.</li>
+                </ul>
+
+                <h4>2.1.2 Database Schema Characteristics</h4>
+                <p>
+                    The relational schema is structured around artwork entities as the central aggregate, with supporting tables for artists, vocabularies, and enrichment metadata. Each model uses Django's <code>AutoField</code> as the implicit primary key, generating sequential integer identifiers. The use of <code>CharField</code> with <code>max_length</code> constraints ensures compatibility with diverse data sources and facilitates full-text search indexing.
+                </p>
+            </section>
+
+            <section id="section2.2">
+                <h3><span class="section-number">2.2</span> Core Entity Models</h3>
+                
+                <h4>2.2.1 Artwork Model</h4>
+                <div class="model-definition">
+                    <p><strong>Purpose:</strong> Represents a single artwork object, serving as the central entity in the system's domain model.</p>
+                    <p><strong>Source Data:</strong> Aggregated from multiple sources including Wikidata, DBpedia, and data.gov.ro (Romanian cultural heritage data).</p>
+                </div>
+
+                <div class="attribute-list">
+                    <p><strong>Attributes and Specifications:</strong></p>
+                    <div class="attribute-item">• <strong>id</strong> (AutoField, PK): Surrogate key; auto-generated integer identifier</div>
+                    <div class="attribute-item">• <strong>title</strong> (CharField, max_length=255, NOT NULL): Primary display name of the artwork</div>
+                    <div class="attribute-item">• <strong>creator</strong> (CharField, max_length=255, nullable): Name of the artist; may reference external artist URIs</div>
+                    <div class="attribute-item">• <strong>date</strong> (CharField, max_length=50, nullable): Temporal attribute; formatted as ISO 8601 or natural language (e.g., "1538-01-01")</div>
+                    <div class="attribute-item">• <strong>museum</strong> (CharField, max_length=255, nullable): Current institutional custodian or repository</div>
+                    <div class="attribute-item">• <strong>movement</strong> (CharField, max_length=255, nullable): Artistic movement or style classification</div>
+                    <div class="attribute-item">• <strong>image_url</strong> (URLField, max_length=500, nullable): Reference to visual representation; typically from Wikimedia Commons</div>
+                </div>
+
+                <h4>2.2.2 DBpediaArtist Model</h4>
+                <div class="model-definition">
+                    <p><strong>Purpose:</strong> Caches artist metadata enriched from DBpedia, reducing repeated external API calls and providing normalized artist representation.</p>
+                    <p><strong>Integration Strategy:</strong> Acts as a materialized view of DBpedia artist records, with <code>owl:sameAs</code> semantics implicit in the design.</p>
+                </div>
+
+                <div class="attribute-list">
+                    <p><strong>Attributes and Specifications:</strong></p>
+                    <div class="attribute-item">• <strong>id</strong> (AutoField, PK): Surrogate key</div>
+                    <div class="attribute-item">• <strong>name</strong> (CharField, max_length=255, unique=True, db_index=True): Artist name; indexed for rapid lookup and enforces uniqueness</div>
+                    <div class="attribute-item">• <strong>abstract</strong> (TextField, nullable): Wikipedia-style textual description of the artist's life and work</div>
+                    <div class="attribute-item">• <strong>birthDate</strong> (CharField, max_length=50, nullable): Birth date; stored as ISO 8601 or partial dates</div>
+                    <div class="attribute-item">• <strong>birthPlace</strong> (CharField, max_length=255, nullable): Geographic location of birth</div>
+                    <div class="attribute-item">• <strong>nationality</strong> (CharField, max_length=255, nullable): Political entity or modern nation-state association</div>
+                    <div class="attribute-item">• <strong>movement</strong> (CharField, max_length=255, nullable): Artistic movement affiliation (e.g., "Impressionism", "Romanticism")</div>
+                    <div class="attribute-item">• <strong>image_url</strong> (URLField, max_length=500, nullable): Portrait or representative image of the artist</div>
+                    <div class="attribute-item">• <strong>fetched_at</strong> (DateTimeField, auto_now_add=True): Timestamp of cache creation; enables staleness detection</div>
+                </div>
+
+                <h4>2.2.3 Rationale for Separate Artist Model</h4>
+                <p>
+                    The distinction between artist names in the <code>Artwork</code> model and the separate <code>DBpediaArtist</code> model reflects a normalization strategy:
+                </p>
+                <ul>
+                    <li><strong>Reduce Redundancy:</strong> Multiple artworks by the same creator reference a single <code>DBpediaArtist</code> record, eliminating data duplication.</li>
+                    <li><strong>Enable Enrichment:</strong> Biographical and movement data are stored separately, allowing independent update cycles and caching strategies.</li>
+                    <li><strong>Support Disambiguation:</strong> The unique constraint on artist name facilitates entity disambiguation, as the same artist name in <code>Artwork.creator</code> always maps to a single enriched record.</li>
+                    <li><strong>Facilitate Linking:</strong> The <code>DBpediaArtist</code> model naturally maps to <code>http://dbpedia.org/resource/&lt;name&gt;</code> URIs in the RDF graph.</li>
+                </ul>
+            </section>
+
+            <section id="section2.3">
+                <h3><span class="section-number">2.3</span> Knowledge Base Integration Models</h3>
+                
+                <h4>2.3.1 GettyULAN Model</h4>
+                <div class="model-definition">
+                    <p><strong>Purpose:</strong> Stores mappings between artist names and Getty ULAN (Union List of Artist Names) identifiers, providing stable, canonical references for artists.</p>
+                    <p><strong>Getty ULAN Context:</strong> ULAN is the Getty Trust's authoritative vocabulary for artist identification, maintained at <code>http://vocab.getty.edu/ulan/</code>.</p>
+                </div>
+
+                <div class="attribute-list">
+                    <p><strong>Attributes and Specifications:</strong></p>
+                    <div class="attribute-item">• <strong>id</strong> (AutoField, PK): Surrogate key</div>
+                    <div class="attribute-item">• <strong>name</strong> (CharField, max_length=255, unique=True, db_index=True): Artist name as lookup key; unique constraint prevents duplicate mappings</div>
+                    <div class="attribute-item">• <strong>ulan_id</strong> (CharField, max_length=50, nullable): Getty ULAN numeric identifier (e.g., "500234926")</div>
+                    <div class="attribute-item">• <strong>ulan_url</strong> (URLField, nullable): HTTP URI for the artist in Getty ULAN (e.g., <code>http://vocab.getty.edu/ulan/500234926</code>)</div>
+                    <div class="attribute-item">• <strong>preferred_label</strong> (CharField, max_length=255, nullable): Canonical artist name from Getty records</div>
+                    <div class="attribute-item">• <strong>fetched_at</strong> (DateTimeField, auto_now_add=True): Timestamp of enrichment; enables cache invalidation</div>
+                </div>
+
+                <h4>2.3.2 GettyAAT Model</h4>
+                <div class="model-definition">
+                    <p><strong>Purpose:</strong> Caches mappings for Getty AAT (Art &amp; Architecture Thesaurus), enabling standardized vocabulary references for art forms, materials, techniques, and styles.</p>
+                    <p><strong>Getty AAT Context:</strong> AAT is an international thesaurus for art and architecture terminology, maintained at <code>http://vocab.getty.edu/aat/</code>.</p>
+                </div>
+
+                <div class="attribute-list">
+                    <p><strong>Attributes and Specifications:</strong></p>
+                    <div class="attribute-item">• <strong>id</strong> (AutoField, PK): Surrogate key</div>
+                    <div class="attribute-item">• <strong>term</strong> (CharField, max_length=255, unique=True, db_index=True): Concept term (e.g., "oil painting", "Renaissance"); indexed for efficient retrieval</div>
+                    <div class="attribute-item">• <strong>aat_id</strong> (CharField, max_length=50, nullable): Getty AAT numeric identifier (e.g., "300015009" for oil painting)</div>
+                    <div class="attribute-item">• <strong>aat_url</strong> (URLField, nullable): HTTP URI in Getty AAT (e.g., <code>http://vocab.getty.edu/aat/300015009</code>)</div>
+                    <div class="attribute-item">• <strong>preferred_label</strong> (CharField, max_length=255, nullable): Canonical term label from Getty records</div>
+                    <div class="attribute-item">• <strong>fetched_at</strong> (DateTimeField, auto_now_add=True): Timestamp; supports cache management</div>
+                </div>
+
+                <h4>2.3.3 Rationale for Separate Vocabulary Models</h4>
+                <p>
+                    The separation of Getty ULAN and Getty AAT into distinct models reflects the semantic and operational independence of artist names and art-historical concepts:
+                </p>
+                <ul>
+                    <li><strong>Semantic Independence:</strong> Artists are agents with biographical properties; art forms and techniques are abstract concepts with hierarchical thesaurus relationships.</li>
+                    <li><strong>Different Update Cycles:</strong> Artist enrichment may occur opportunistically when an artwork is first ingested, whereas art concepts may be indexed proactively.</li>
+                    <li><strong>Reusability:</strong> Multiple artworks may reference the same AAT concept (e.g., "oil painting"), but each artist is a distinct entity.</li>
+                    <li><strong>Thesaurus Navigation:</strong> Getty AAT provides hierarchical relationships (broader, narrower, related terms) that may be exploited in future query expansion or visualization features.</li>
+                </ul>
+            </section>
+
+            <section id="section2.4">
+                <h3><span class="section-number">2.4</span> Data Mapping and Normalization</h3>
+                
+                <h4>2.4.1 Normalization Strategy</h4>
+                <p>
+                    The relational schema employs the following normalization techniques:
+                </p>
+                
+                <h4>2.4.2 First and Second Normal Form (1NF and 2NF)</h4>
+                <p>
+                    All models exhibit atomic attributes (1NF). No partial functional dependencies exist on non-key attributes (2NF). The uniqueness constraints on artist name and vocabulary terms prevent duplicate keys and ensure relational integrity.
+                </p>
+
+                <h4>2.4.3 Handling Multivalued Attributes</h4>
+                <p>
+                    The API response schema (defined in <code>openapi.yaml</code>) reveals that single records in the relational schema are presented to clients as objects with multivalued fields such as <code>creators</code> (array), <code>movements</code> (array), <code>birth_places</code> (array). This design choice is accomplished through computed properties or query-time aggregation:
+                </p>
+                <ul>
+                    <li><strong>Query-Level Aggregation:</strong> SPARQL queries (executed against Fuseki) or Django ORM aggregations combine multiple relationships into arrays.</li>
+                    <li><strong>Denormalization in API Responses:</strong> Serializers (not shown in the model file but implied by the API spec) flatten and structure nested relationships for client consumption.</li>
+                    <li><strong>RDF Graph Advantage:</strong> The RDF layer naturally models multivalued attributes as multiple triples with the same subject and predicate but different objects.</li>
+                </ul>
+
+                <h4>2.4.4 External Key Management</h4>
+                <p>
+                    The models lack explicit foreign key relationships, instead using string-based references (name, term). This design choice facilitates loose coupling to external data sources:
+                </p>
+                <ul>
+                    <li><strong>Flexibility:</strong> Artwork titles and creator names are not normalized to integer foreign keys, allowing the system to ingest heterogeneous data without strict pre-validation.</li>
+                    <li><strong>Late Binding:</strong> Enrichment processes (e.g., DBpedia lookup) occur asynchronously, linking <code>Artwork.creator</code> strings to <code>DBpediaArtist</code> records after ingestion.</li>
+                    <li><strong>RDF Integration:</strong> String-based linking aligns with the RDF data model, where URIs (often derived from names or identifiers) are the primary linking mechanism.</li>
+                </ul>
+
+                <h4>2.4.5 DateTime and Temporal Data Handling</h4>
+                <p>
+                    The inclusion of <code>fetched_at</code> timestamps in enrichment models (<code>DBpediaArtist</code>, <code>GettyULAN</code>, <code>GettyAAT</code>) enables temporal querying and cache invalidation:
+                </p>
+                <ul>
+                    <li><strong>Data Provenance:</strong> Timestamp records when external data was last retrieved, supporting audit trails.</li>
+                    <li><strong>Cache Expiry:</strong> Application logic can query records older than a threshold (e.g., 30 days) and mark them for refresh.</li>
+                    <li><strong>Temporal Integrity:</strong> Multiple enrichments of the same entity over time can be tracked, supporting versioning strategies in the RDF graph.</li>
+                </ul>
+
+                <div class="note">
+                    <strong>Note on Temporal Data in Artwork:</strong> The <code>Artwork.date</code> field stores creation dates as strings, not DateField instances. This design accommodates partial dates (e.g., "1538", "Early 1500s") and non-Gregorian calendars, which are common in art historical metadata.
+                </div>
+            </section>
+
+            <section id="section2.5">
+                <h3><span class="section-number">2.5</span> Indexing and Performance Optimization</h3>
+                
+                <h4>2.5.1 Database Indexing Strategy</h4>
+                <p>
+                    Strategic use of <code>db_index=True</code> declarations on high-cardinality and frequently filtered attributes optimizes query performance:
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Model</th>
+                            <th>Index Type</th>
+                            <th>Rationale</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>name</code></td>
+                            <td>DBpediaArtist, GettyULAN</td>
+                            <td>UNIQUE INDEX</td>
+                            <td>Primary lookup key; prevents duplicates; enables fast joins</td>
+                        </tr>
+                        <tr>
+                            <td><code>term</code></td>
+                            <td>GettyAAT</td>
+                            <td>UNIQUE INDEX</td>
+                            <td>Primary vocabulary term identifier; ensures semantic consistency</td>
+                        </tr>
+                        <tr>
+                            <td><code>creator</code></td>
+                            <td>Artwork (implicit)</td>
+                            <td>Regular INDEX</td>
+                            <td>Filtering and join operations; frequently queried in API calls</td>
+                        </tr>
+                        <tr>
+                            <td><code>title</code></td>
+                            <td>Artwork (implicit)</td>
+                            <td>Regular INDEX (or FULLTEXT)</td>
+                            <td>Text search support; display in API responses</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>2.5.2 Query Performance Considerations</h4>
+                <p>
+                    The relational model is optimized for the following query patterns:
+                </p>
+                <ul>
+                    <li><strong>Lookup by ID:</strong> <code>SELECT * FROM artworks WHERE id = ?</code> — O(1) with primary key index.</li>
+                    <li><strong>Lookup by creator name:</strong> <code>SELECT * FROM artworks WHERE creator = ?</code> — O(log n) with index on <code>creator</code>.</li>
+                    <li><strong>Enrichment joins:</strong> <code>SELECT a.*, d.* FROM artworks a JOIN dbpedia_artists d ON a.creator = d.name</code> — fast with unique index on <code>DBpediaArtist.name</code>.</li>
+                    <li><strong>Pagination:</strong> <code>SELECT * FROM artworks LIMIT ? OFFSET ?</code> — leverages primary key scanning.</li>
+                </ul>
+
+                <h4>2.5.3 Denormalization Trade-offs</h4>
+                <p>
+                    The <code>Artwork</code> model stores <code>movement</code> as a single string rather than normalizing to a separate <code>Movement</code> table. This design choice reflects the following trade-offs:
+                </p>
+                <ul>
+                    <li><strong>Advantage:</strong> Eliminates a join in the common case of single-movement artworks; reduces schema complexity.</li>
+                    <li><strong>Disadvantage:</strong> Multi-movement artworks require delimited strings (e.g., "Impressionism; Post-Impressionism") or denormalization in the API response layer.</li>
+                    <li><strong>Mitigation:</strong> The RDF layer provides a more natural representation via multiple <code>dcterms:isPartOf</code> or <code>skos:broader</code> predicates, allowing rich movement hierarchies in SPARQL queries.</li>
+                </ul>
+
+                <h4>2.5.4 Caching Strategy</h4>
+                <p>
+                    The presence of <code>fetched_at</code> fields in enrichment models enables a time-based caching strategy:
+                </p>
+                <ul>
+                    <li><strong>Cache Invalidation:</strong> Application code can identify stale records (e.g., older than 30 days) and re-fetch from external sources.</li>
+                    <li><strong>Lazy Enrichment:</strong> When a new artwork is ingested with creator name "Vincent van Gogh", the system checks for an existing <code>DBpediaArtist</code> record; if not found, it triggers asynchronous enrichment.</li>
+    
+                </ul>
+
+                <div class="note">
+                    <strong>Implementation Detail:</strong> The models use a time-based caching strategy with <code>fetched_at</code> timestamps to track enrichment data age. The relational database stores DBpedia enrichment data, which can be queried and updated independently of the RDF layer.
+                </div>
+            </section>
+        </section>
+
+        <section>
+            <h2><span class="section-number">4.</span> Data Quality and Integrity Considerations</h2>
+            
+            <h3><span class="section-number">4.1</span> Constraint Enforcement</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Constraint Type</th>
+                        <th>Implementation</th>
+                        <th>Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Primary Key</td>
+                        <td>AutoField(id) on all models</td>
+                        <td>Ensures unique record identification; enables efficient indexing</td>
+                    </tr>
+                    <tr>
+                        <td>Unique Constraint</td>
+                        <td><code>unique=True</code> on artist name, vocabulary terms</td>
+                        <td>Prevents duplicate enrichment records; enables semantic linking</td>
+                    </tr>
+                    <tr>
+                        <td>Not Null</td>
+                        <td><code>null=False</code> on title (implicit)</td>
+                        <td>Ensures artworks have identifiable display names</td>
+                    </tr>
+                    <tr>
+                        <td>Nullable Optional Data</td>
+                        <td><code>null=True, blank=True</code> on enrichment fields</td>
+                        <td>Accommodates incomplete metadata from heterogeneous sources</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3><span class="section-number">4.2</span> Data Validation</h3>
+            <p>
+                Validation occurs at multiple layers:
+            </p>
+            <ul>
+                <li><strong>Model Validation:</strong> Django <code>ModelForm.full_clean()</code> validates field types, lengths, and format (e.g., URLField).</li>
+                <li><strong>Application Logic:</strong> Views and serializers implement business rules (e.g., artwork titles must be non-empty, dates must be parseable).</li>
+                <li><strong>RDF Schema Validation:</strong> SPARQL CONSTRUCT queries and custom RDF validators ensure that RDF triples conform to expected ontological patterns.</li>
+            </ul>
+
+            <h3><span class="section-number">4.3</span> Handling Incomplete or Conflicting Data</h3>
+            <p>
+                When integrating data from multiple sources, conflicts and gaps are inevitable:
+            </p>
+            <ul>
+                <li><strong>Partial Dates:</strong> Artwork dates like "1538" (year only) are stored as strings and mapped to <code>xsd:gYear</code> in RDF.</li>
+                <li><strong>Name Variants:</strong> An artist may be known by multiple names (e.g., "Pablo Picasso" vs. "Pablos Ruiz Picasso"). The <code>DBpediaArtist.name</code> stores the primary name, with variants tracked via <code>skos:altLabel</code> in RDF.</li>
+                <li><strong>Missing Enrichment:</strong> An artwork may lack a DBpedia artist record if the creator name is misspelled or obscure. The system gracefully degrades, presenting the artwork with partial metadata.</li>
+            </ul>
+        </section>
+
+        <section id="section3">
+            <h2><span class="section-number">3.</span> REST API Technical Aspects</h2>
+            
+            <section id="section3.1">
+            <h3><span class="section-number">3.1</span> API Architecture and Endpoint Design</h3>
+            <p>
+                The REST API is built using Django with view functions returning JSON responses. The API serves as the primary interface for web clients, exposing artwork data and access to the SPARQL endpoint:
+            </p>
+            <ul>
+                <li><strong>Core Artwork Endpoints:</strong> <code>/api/artworks</code> for paginated artwork retrieval.</li>
+                <li><strong>Statistics Endpoints:</strong> <code>/stats/api/</code>, <code>/getty/stats/api/</code>, <code>/romanian/api/</code> for collection analytics.</li>
+                <li><strong>SPARQL Endpoint:</strong> <code>/sparql</code> for direct RDF graph queries using SPARQL, proxying to Apache Jena Fuseki.</li>
+            </ul>
+            </section>
+
+            <section id="section3.2">
+            <h3><span class="section-number">3.2</span> API Response Format and Pagination</h3>
+            <p>
+                The API returns JSON responses with standard HTTP Content-Type headers. Results are formatted as JSON objects containing artwork metadata, pagination information, and enrichment data from DBpedia.
+            </p>
+            <p>
+                Large collections require efficient pagination to minimize memory footprint and network latency. The API implements offset-based pagination:
+            </p>
+            <ul>
+                <li><strong>Pagination Parameters:</strong> <code>page</code> (1-based page number) and <code>per_page</code> (items per page, default 50, maximum 100).</li>
+                <li><strong>Response Metadata:</strong> Paginated responses include <code>total</code> (total result count), <code>page</code>, <code>per_page</code>, and <code>total_pages</code> for client-side navigation.</li>
+            </ul>
+            </section>
+
+            <section id="section3.3">
+            <h3><span class="section-number">3.3</span> SPARQL Endpoint Integration</h3>
+            <p>
+                The API exposes a <code>/sparql</code> endpoint that proxies SPARQL 1.1 Protocol requests to Apache Jena Fuseki. This design allows semantic web applications to execute complex graph queries directly:
+            </p>
+            <ul>
+                <li><strong>Query Methods:</strong> Both GET and POST are supported per SPARQL protocol. GET passes the query as a URL parameter; POST uses <code>application/x-www-form-urlencoded</code> or <code>application/sparql-query</code> content type.</li>
+                <li><strong>Result Formats:</strong> Query results are returned in JSON format.</li>
+                <li><strong>Authentication:</strong> Direct SPARQL endpoint access may require API authentication tokens to prevent abuse and rate-limit heavy queries.</li>
+                <li><strong>Query Timeout:</strong> Long-running queries are terminated after a configurable timeout (default 30 seconds) to prevent resource exhaustion.</li>
+            </ul>
+
+            <p>
+                Example SPARQL query via the endpoint:
+            </p>
+            <pre><code>GET /sparql?query=PREFIX+dcterms:+%3Chttp://purl.org/dc/terms/%3E%0ASELECT+?title+WHERE+%7B%0A++?artwork+dcterms:title+?title%0A%7D+LIMIT+10</code></pre>
+            </section>
+
+            <section id="section3.4">
+            <h3><span class="section-number">3.4</span> Error Handling and Response Patterns</h3>
+            <p>
+                Consistent error handling improves API usability and enables robust client implementations. The API returns standard HTTP status codes with machine-readable error details:
+            </p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>HTTP Status</th>
+                        <th>Scenario</th>
+                        <th>Response Body</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>200 OK</td>
+                        <td>Successful GET, HEAD request</td>
+                        <td>Resource representation (JSON)</td>
+                    </tr>
+                    <tr>
+                        <td>201 Created</td>
+                        <td>Successful POST (resource creation)</td>
+                        <td>Created resource representation with Location header</td>
+                    </tr>
+                    <tr>
+                        <td>204 No Content</td>
+                        <td>Successful DELETE or empty response</td>
+                        <td>Empty body</td>
+                    </tr>
+                    <tr>
+                        <td>400 Bad Request</td>
+                        <td>Invalid query parameters, malformed SPARQL</td>
+                        <td><code>{"error": "error message", "details": {...}}</code></td>
+                    </tr>
+                    <tr>
+                        <td>404 Not Found</td>
+                        <td>Resource does not exist</td>
+                        <td><code>{"error": "Artwork not found", "id": 999}</code></td>
+                    </tr>
+                    <tr>
+                        <td>500 Internal Server Error</td>
+                        <td>SPARQL query error, database failure</td>
+                        <td><code>{"error": "SPARQL query failed", "message": "..."}</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Error responses consistently include an <code>error</code> field with a human-readable message and optionally a <code>details</code> object with structured debugging information. This pattern enables clients to implement graceful error recovery and provide meaningful feedback to users.
+            </p>
+
+            <h3><span class="section-number">3.5</span> Security and Authentication</h3>
+            <p>
+            </section>
+                The API is publicly accessible with read-only access via GET requests. No authentication is currently configured.
+            </p>
+        </section>
+
+        <section id="section4">
+            <h2><span class="section-number">4.</span> RDF-Based Knowledge Model</h2>
+            
+            <section id="section4.1">
+            <h3><span class="section-number">4.1</span> Vocabulary Selection and Justification</h3>
+            <p>
+                The Artwork Provenance System employs a carefully selected set of RDF vocabularies that balance semantic expressiveness with implementation practicality. Rather than adopting a single heavyweight ontology, the system follows a pragmatic multi-vocabulary approach, reusing established W3C standards and domain-specific vocabularies from the cultural heritage community. This design philosophy prioritizes interoperability and ease of integration over maximal semantic precision.
+            </p>
+            <p>
+                The three core vocabularies employed are:
+            </p>
+            <ul>
+                <li><strong>Dublin Core (DCTERMS):</strong> For descriptive metadata (title, creator, date, subject, language, format).</li>
+                <li><strong>OWL (Web Ontology Language):</strong> For entity linking via <code>owl:sameAs</code> and schema definition.</li>
+                <li><strong>SKOS (Simple Knowledge Organization System):</strong> For controlled vocabularies, concept hierarchies, and vocabulary mappings.</li>
+            </ul>
+            </section>
+
+            <section id="section4.2">
+            <h3><span class="section-number">4.2</span> Dublin Core (DCTERMS) for Descriptive Metadata</h3>
+            <p>
+                Dublin Core is the most widely adopted metadata vocabulary in digital libraries and cultural heritage institutions. It provides a lightweight, interoperable foundation for describing intellectual resources.
+            </p>
+
+            <h4>4.2.1 Core DCTERMS Predicates Used</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>DCTERMS Predicate</th>
+                        <th>Mapped From</th>
+                        <th>Range</th>
+                        <th>Usage Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>dcterms:title</code></td>
+                        <td>Artwork.title</td>
+                        <td>Literal (string)</td>
+                        <td>"Portrait of X"</td>
+                    </tr>
+                    <tr>
+                        <td><code>dcterms:creator</code></td>
+                        <td>Artwork.creator / DBpediaArtist</td>
+                        <td>URI (artist)</td>
+                        <td><code>&lt;http://dbpedia.org/resource/ArtistName&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dcterms:date</code></td>
+                        <td>Artwork.date</td>
+                        <td>Literal (xsd:gYear or xsd:date)</td>
+                        <td>"1538"^^xsd:gYear</td>
+                    </tr>
+                    <tr>
+                        <td><code>dcterms:isPartOf</code></td>
+                        <td>Artwork.museum</td>
+                        <td>URI (museum/collection)</td>
+                        <td><code>&lt;http://example.org/museum/uffizi&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>dcterms:subject</code></td>
+                        <td>Artwork.movement / GettyAAT</td>
+                        <td>URI (concept)</td>
+                        <td><code>&lt;http://vocab.getty.edu/aat/300021140&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>4.2.2 Rationale for DCTERMS</h4>
+            <p>
+                Dublin Core offers several pragmatic advantages:
+            </p>
+            <ul>
+                <li><strong>Simplicity:</strong> Each predicate maps to a single, unambiguous concept with clear semantics. No complex role hierarchies or contextual dependencies.</li>
+                <li><strong>Broad Adoption:</strong> Libraries, museums, and archives widely use DCTERMS, ensuring maximum interoperability with external systems.</li>
+                <li><strong>RDF Native:</strong> DCTERMS is designed for RDF, with well-defined ranges and semantic relationships already established in the W3C specification.</li>
+                <li><strong>Extensibility:</strong> DCTERMS predicates can be combined with other vocabularies (e.g., DCTERMS + SKOS for subject refinement) without semantic conflicts.</li>
+            </ul>
+            </section>
+
+            <section id="section4.3">
+            <h3><span class="section-number">4.3</span> OWL for Entity Linking</h3>
+            <p>
+                The Web Ontology Language (OWL) provides formal semantics for describing relationships between resources. In this system, OWL is used primarily for entity linking and equivalence declarations.
+            </p>
+
+            <h4>4.3.1 <code>owl:sameAs</code> for Entity Equivalence</h4>
+            <p>
+                The most important OWL predicate used is <code>owl:sameAs</code>, which asserts that two URIs refer to the same entity. This is crucial for linking local application URIs to external knowledge bases:
+            </p>
+            <div class="diagram">
+# Local artwork URI is equivalent to external Wikidata URI
+&lt;http://example.org/artwork/123&gt; owl:sameAs &lt;http://www.wikidata.org/entity/Q123456&gt; .
+
+# Local artist is same as DBpedia artist
+&lt;http://example.org/artist/leonardo&gt; owl:sameAs &lt;http://dbpedia.org/resource/Leonardo_da_Vinci&gt; .
+
+# Local artist is same as Getty ULAN entry
+&lt;http://example.org/artist/leonardo&gt; owl:sameAs &lt;http://vocab.getty.edu/ulan/500010879&gt; .
+            </div>
+
+            <h4>4.3.2 Expressiveness and Limitations</h4>
+            <p>
+                <code>owl:sameAs</code> is semantically strong: it declares URI reference equivalence at the logical level, enabling SPARQL engines to treat linked entities as identical in query results. However, this introduces a practical limitation: transitive closure over many <code>owl:sameAs</code> links can create performance issues in inference engines.
+            </p>
+            <p>
+                The system mitigates this by:
+            </p>
+            <ul>
+                <li>Limiting <code>owl:sameAs</code> chains to at most two hops (local → external → external).</li>
+                <li>Using local caching: enrichment workflows resolve transitive links once and cache the results.</li>
+            </section>
+
+            <section id="section4.4">                <li>Avoiding circular <code>owl:sameAs</code> relationships through validation during data import.</li>
+            </ul>
+
+            <h3><span class="section-number">4.4</span> SKOS for Controlled Vocabularies</h3>
+            <p>
+                SKOS (Simple Knowledge Organization System) is designed for representing controlled vocabularies, taxonomies, and thesauri. In the artwork provenance system, SKOS is used to model art movements, techniques, and materials.
+            </p>
+
+            <h4>4.4.1 SKOS Core Predicates</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>SKOS Predicate</th>
+                        <th>Semantics</th>
+                        <th>Usage in System</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>skos:prefLabel</code></td>
+                        <td>Preferred textual label for a concept</td>
+                        <td>Official movement name (e.g., "Impressionism")</td>
+                    </tr>
+                    <tr>
+                        <td><code>skos:altLabel</code></td>
+                        <td>Alternate label for the same concept</td>
+                        <td>Variant spellings or names (e.g., "Impressionist")</td>
+                    </tr>
+                    <tr>
+                        <td><code>skos:broader</code></td>
+                        <td>Hierarchical parent-child relationship</td>
+                        <td>Movement hierarchy (e.g., "Modernism" is broader than "Cubism")</td>
+                    </tr>
+                    <tr>
+                        <td><code>skos:narrower</code></td>
+                        <td>Inverse of skos:broader</td>
+                        <td>Child concepts under a movement</td>
+                    </tr>
+                    <tr>
+                        <td><code>skos:relatedMatch</code></td>
+                        <td>Mapping to concept in external vocabulary</td>
+                        <td>Getty AAT concept mapping</td>
+                    </tr>
+                    <tr>
+                        <td><code>skos:exactMatch</code></td>
+                        <td>Exact equivalence (stronger than relatedMatch)</td>
+                        <td>Direct mapping to DBpedia or Wikidata concepts</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>4.4.2 Example: Movement Vocabulary with SKOS</h4>
+            <div class="diagram">
+# Define a movement concept
+&lt;http://example.org/movement/impressionism&gt;
+    a skos:Concept ;
+    skos:prefLabel "Impressionism" ;
+    skos:altLabel "Impressionist Movement" ;
+    skos:broader &lt;http://example.org/movement/modernism&gt; ;
+    skos:exactMatch &lt;http://vocab.getty.edu/aat/300021140&gt; ;
+    skos:exactMatch &lt;http://dbpedia.org/resource/Impressionism&gt; .
+
+# Artwork references the movement concept
+&lt;http://example.org/artwork/456&gt;
+    dcterms:subject &lt;http://example.org/movement/impressionism&gt; .
+            </div>
+            </section>
+
+            <section id="section4.5">
+            <h3><span class="section-number">4.5</span> Semantic Mapping and Expressiveness</h3>
+            <p>
+                The combination of DCTERMS, OWL, and SKOS enables the system to represent artwork entities with sufficient semantic precision for most use cases, while remaining lightweight and implementable in practice.
+            </p>
+
+            <h4>4.5.1 Complete Artwork Representation</h4>
+            <p>
+                A typical artwork is represented as follows in RDF:
+            </p>
+            <pre><code>PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+&lt;http://example.org/artwork/mona-lisa&gt;
+    dcterms:title "Mona Lisa" ;
+    dcterms:creator &lt;http://dbpedia.org/resource/Leonardo_da_Vinci&gt; ;
+    dcterms:date "1503"^^xsd:gYear ;
+    dcterms:isPartOf &lt;http://dbpedia.org/resource/Louvre&gt; ;
+    dcterms:subject &lt;http://example.org/movement/renaissance&gt; ;
+    owl:sameAs &lt;http://www.wikidata.org/entity/Q12418&gt; ;
+    foaf:depiction &lt;http://upload.wikimedia.org/...&gt; .
+
+&lt;http://example.org/movement/renaissance&gt;
+    skos:prefLabel "Renaissance" ;
+    skos:broader &lt;http://example.org/movement/medieval-modern&gt; ;
+    skos:exactMatch &lt;http://vocab.getty.edu/aat/300021140&gt; .</code></pre>
+
+            <h4>4.5.2 Query Expressiveness</h4>
+            <p>
+                This semantic representation enables queries of varying complexity:
+            </p>
+            <ul>
+                <li><strong>Simple Lookup:</strong> Find artworks by title using <code>dcterms:title</code> triple patterns.</li>
+                <li><strong>Creator Search:</strong> Find artworks by creator URI, optionally following <code>owl:sameAs</code> to find works by equivalent entities.</li>
+                <li><strong>Temporal Queries:</strong> Use <code>dcterms:date</code> with xsd:gYear to find artworks created in a date range.</li>
+                <li><strong>Hierarchical Search:</strong> Use <code>skos:broader</code> to find all artworks in a movement and its parent movements (e.g., all Impressionist and Modern artworks).</li>
+                <li><strong>Cross-Source Discovery:</strong> Use <code>owl:sameAs</code> to federate across DBpedia and Wikidata, finding external descriptions and images.</li>
+            </ul>
+            </section>
+
+            <section id="section4.6">
+            <h3><span class="section-number">4.6</span> Practical Trade-offs and Design Decisions</h3>
+            
+            <h4>4.6.1 Vocabulary Design Rationale</h4>
+            <p>
+                The system employs a pragmatic vocabulary selection strategy, prioritizing simplicity and interoperability over maximal semantic expressiveness. This design philosophy enables rapid implementation and deployment while maintaining extensibility for future enhancements.
+            </p>
+
+            <h4>4.6.2 Handling Missing or Ambiguous Data</h4>
+            <p>
+                The RDF model gracefully handles incomplete metadata:
+            </p>
+            <ul>
+                <li><strong>Optional Properties:</strong> Triples for properties like <code>dcterms:date</code> or <code>foaf:depiction</code> are simply omitted if not available. SPARQL OPTIONAL clauses retrieve available data without failing queries.</li>
+                <li><strong>Blank Nodes for Anonymity:</strong> When an artwork's creator is unknown, a blank node or literal is used instead of a URI, allowing the artwork to be represented without requiring creator disambiguation.</li>
+                <li><strong>Provenance Annotations:</strong> The system can add provenance metadata (e.g., <code>dcterms:created</code> on the triple itself, using RDF reification) to document data quality and origin.</li>
+            </ul>
+
+            <h4>4.6.3 Vocabulary Versioning and Stability</h4>
+            <p>
+                The vocabularies used have strong stability guarantees:
+            </p>
+            <ul>
+                <li><strong>DCTERMS:</strong> W3C standard, frozen as of 2008, with backward-compatible versions maintained.</li>
+                <li><strong>SKOS:</strong> W3C Recommendation, mature and widely deployed; term definitions are stable.</li>
+                <li><strong>OWL:</strong> W3C standard with multiple versions; the system uses OWL DL semantics.</li>
+            </ul>
+            <p>
+                The system avoids proprietary or experimental vocabularies, ensuring long-term sustainability and portability.
+            </p>
+
+            <h4>4.6.4 Serialization and Data Export</h4>
+            <p>
+                The system stores RDF data in Apache Jena Fuseki and exposes it through JSON-based APIs for client consumption. The RDF layer is maintained internally for complex queries and semantic reasoning.
+            </p>
+            </section>
+        </section>
+
+        <section id="section5">
+            <h2><span class="section-number">5.</span> External Knowledge Sources and Linked Data Integration</h2>
+            
+            <section id="section5.1">
+            <h3><span class="section-number">5.1</span> External Knowledge Bases Overview</h3>
+            <p>
+                The Artwork Provenance System integrates with multiple authoritative external knowledge bases to enrich local data. This pragmatic approach to external data combines the benefits of curated, well-maintained global resources with the flexibility and control of a local knowledge graph. The primary external sources are:
+            </p>
+            <ul>
+                <li><strong>DBpedia:</strong> Community-driven extraction of Wikipedia structured data; provides artist biographies, birth/death dates, and movement associations.</li>
+                <li><strong>Wikidata:</strong> Collaborative free knowledge base with strong machine-readable structure; provides artwork identifiers, creator links, and cross-language descriptions.</li>
+                <li><strong>Getty ULAN:</strong> Getty Trust's authoritative artist name vocabulary with stable identifiers; enables disambiguation and canonical naming.</li>
+                <li><strong>Getty AAT:</strong> Comprehensive art and architecture thesaurus; provides standardized concepts for materials, techniques, and movements.</li>
+                <li><strong>data.gov.ro:</strong> Romanian government open data portal; source for Romanian cultural heritage records and digitization metadata.</li>
+            </ul>
+            </section>
+
+            <section id="section5.2">
+            <h3><span class="section-number">5.2</span> DBpedia Artist Enrichment</h3>
+            <p>
+                DBpedia provides rich biographical data extracted from Wikipedia infoboxes. The system fetches and caches DBpedia records to avoid repeated external calls and to enable offline querying.
+            </p>
+
+            <h4>5.2.1 Enrichment Workflow</h4>
+            <ol>
+                <li><strong>Detection:</strong> When an Artwork record with creator name is ingested, the system checks if a corresponding DBpediaArtist record exists in the local cache.</li>
+                <li><strong>Lookup:</strong> If not cached, the system constructs a DBpedia URI: <code>http://dbpedia.org/resource/&lt;URLEncodedName&gt;</code> and issues a SPARQL query to <code>http://dbpedia.org/sparql</code>.</li>
+                <li><strong>Fetch:</strong> The enrichment script (implemented in <code>artworks/dbpedia.py</code>) retrieves properties: abstract, birthDate, birthPlace, nationality, movement, depiction (image).</li>
+                <li><strong>Cache:</strong> The fetched data is stored in the DBpediaArtist model with a timestamp (<code>fetched_at</code>), enabling cache staleness detection.</li>
+                <li><strong>Link:</strong> In the RDF layer, an <code>owl:sameAs</code> triple is created linking the local artist URI to the DBpedia URI.</li>
+            </ol>
+
+            <h4>5.2.2 Example DBpedia Query</h4>
+            <pre><code>PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
+PREFIX foaf: &lt;http://xmlns.com/foaf/0.1/&gt;
+PREFIX dbpedia: &lt;http://dbpedia.org/resource/&gt;
+
+SELECT ?birthDate ?birthPlace ?abstract
+WHERE {
+  dbpedia:Leonardo_da_Vinci
+    dbo:birthDate ?birthDate ;
+    dbo:birthPlace ?birthPlace ;
+    rdfs:comment ?abstract .
+  FILTER(lang(?abstract) = "en")
+}</code></pre>
+            </section>
+
+            <section id="section5.3">
+            <h3><span class="section-number">5.3</span> Wikidata Discovery and Linking</h3>
+            <p>
+                The system includes code to fetch artwork and artist data from Wikidata via SPARQL queries (implemented in <code>sparql.py</code>). Wikidata data is imported into the Fuseki RDF store and can be queried directly via SPARQL.
+            </p>
+
+            <h4>5.3.2 Example Wikidata SPARQL Query</h4>
+            <pre><code>PREFIX wikibase: &lt;http://wikiba.se/ontology#&gt;
+PREFIX bd: &lt;http://www.bigdata.com/rdf#&gt;
+PREFIX wd: &lt;http://www.wikidata.org/entity/&gt;
+PREFIX wdt: &lt;http://www.wikidata.org/prop/direct/&gt;
+
+SELECT ?artwork ?artworkLabel ?creatorLabel ?creationDate
+WHERE {
+  SERVICE wikibase:mwapi {
+    bd:serviceParam mwapi:search "Mona Lisa" ;
+                    mwapi:language "en" .
+    ?title wikibase:apiOutput mwapi:search .
+  }
+  ?artwork wdt:P31 wd:Q3305213 .  # instance of painting
+  ?artwork rdfs:label ?artworkLabel .
+  ?artwork wdt:P170 ?creator .    # created by
+  ?creator rdfs:label ?creatorLabel .
+  OPTIONAL { ?artwork wdt:P571 ?creationDate . }
+  FILTER(lang(?artworkLabel) = "en" &amp;&amp; lang(?creatorLabel) = "en")
+}
+LIMIT 10</code></pre>
+            </section>
+
+            <section id="section5.4">
+            <h3><span class="section-number">5.4</span> Getty Vocabularies (ULAN, AAT)</h3>
+            <p>
+                Getty ULAN (Union List of Artist Names) and AAT (Art &amp; Architecture Thesaurus) are curated, internationally recognized vocabularies. The system includes database models for caching Getty data, with enrichment functions available in <code>getty_enrichment.py</code>.
+            </p>
+
+            <h4>5.4.3 Example Getty AAT Query</h4>
+            <pre><code>PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+PREFIX aat: &lt;http://vocab.getty.edu/aat/&gt;
+
+SELECT ?concept ?term ?broaderTerm
+WHERE {
+  ?concept skos:prefLabel "impressionism" ;
+           skos:broader ?broader .
+  ?broader skos:prefLabel ?broaderTerm .
+}
+ORDER BY ?broaderTerm</code></pre>
+            </section>
+
+            <section id="section5.5">
+            <h3><span class="section-number">5.5</span> Representative SPARQL Queries</h3>
+            <p>
+                The following SPARQL queries demonstrate practical use cases enabled by the integrated knowledge graph. These queries combine local RDF data with external sources via federation or cached enrichments.
+            </p>
+
+            <h4>5.5.1 Query 1: Artwork with Full Enrichment</h4>
+            <p>
+                Find a specific artwork with enriched creator information (local + DBpedia):
+            </p>
+            <pre><code>PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX dbo: &lt;http://dbpedia.org/ontology/&gt;
+
+SELECT ?title ?creatorName ?birthDate ?nationality
+WHERE {
+  ?artwork dcterms:title "Mona Lisa" ;
+           dcterms:creator ?creatorURI .
+  ?creatorURI owl:sameAs ?dbpediaURI .
+  ?dbpediaURI rdfs:label ?creatorName ;
+              dbo:birthDate ?birthDate ;
+              dbo:nationality ?nationality .
+}
+LIMIT 1</code></pre>
+
+            <h4>5.5.2 Query 2: Artworks by Movement with Transitive Hierarchy</h4>
+            <p>
+                Find all artworks in the Renaissance and its sub-movements:
+            </p>
+            <pre><code>PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+SELECT ?artwork ?title ?movementLabel
+WHERE {
+  ?movement skos:prefLabel "Renaissance" .
+  ?artwork dcterms:subject ?submovement .
+  ?submovement (skos:broader)* ?movement .
+  ?artwork dcterms:title ?title ;
+           dcterms:subject ?submovement .
+  ?submovement skos:prefLabel ?movementLabel .
+}
+ORDER BY ?movementLabel ?title</code></pre>
+
+            <h4>5.5.3 Query 3: Federated Query with Wikidata</h4>
+            <p>
+                Find artworks with their creation location from Wikidata (federated query):
+            </p>
+            <pre><code>PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX wdt: &lt;http://www.wikidata.org/prop/direct/&gt;
+
+SELECT ?artwork ?title ?creationLocation
+WHERE {
+  ?artwork dcterms:title ?title ;
+           owl:sameAs ?wikidataURI .
+  SERVICE &lt;https://query.wikidata.org/sparql&gt; {
+    ?wikidataURI wdt:P625 ?location .  # location coordinate
+    ?wikidataURI wdt:P131 ?creationLocation .  # located in
+  }
+}
+LIMIT 10</code></pre>
+
+            <h4>5.5.4 Query 4: Artist Disambiguation via Multiple External Sources</h4>
+            <p>
+                Find all identifiers for an artist across DBpedia, Wikidata, and Getty:
+            </p>
+            <pre><code>PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX skos: &lt;http://www.w3.org/2004/02/skos/core#&gt;
+
+SELECT ?dbpediaURI ?wikidataURI ?gettyULANURI
+WHERE {
+  ?localArtist a schema:Person ;
+               owl:sameAs ?dbpediaURI .
+  ?dbpediaURI owl:sameAs ?wikidataURI .
+  ?localArtist owl:sameAs ?gettyULANURI .
+  FILTER(strstarts(str(?dbpediaURI), "http://dbpedia.org/"))
+  FILTER(strstarts(str(?wikidataURI), "http://www.wikidata.org/"))
+  FILTER(strstarts(str(?gettyULANURI), "http://vocab.getty.edu/ulan/"))
+}</code></pre>
+
+            <h4>5.5.5 Query 5: Data Quality Check – Artwork without Creator Enrichment</h4>
+            <p>
+                Identify artworks whose creators lack DBpedia or Wikidata records (gaps in enrichment):
+            </p>
+            <pre><code>PREFIX dcterms: &lt;http://purl.org/dc/terms/&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+
+SELECT ?artwork ?title ?creator
+WHERE {
+  ?artwork dcterms:title ?title ;
+           dcterms:creator ?creator .
+  FILTER NOT EXISTS { ?creator owl:sameAs ?external . }
+}
+ORDER BY ?creator
+LIMIT 20</code></pre>
+            </section>
+
+            <section id="section5.6">
+            <h3><span class="section-number">5.6</span> Linked Data Principles Conformance</h3>
+            <p>
+                Linked Data is defined by four principles (Berners-Lee, 2006). The Artwork Provenance System implements all four:
+            </p>
+
+            <h4>5.6.1 Principle 1: Use HTTP URIs as Identifiers</h4>
+            <p>
+                <strong>Implementation:</strong> Every artwork, artist, and movement is identified by an HTTP URI. For example:
+            </p>
+            <ul>
+                <li><code>http://example.org/artwork/123</code> — Local artwork identifier</li>
+                <li><code>http://example.org/artist/leonardo</code> — Local artist identifier</li>
+                <li><code>http://dbpedia.org/resource/Leonardo_da_Vinci</code> — External (DBpedia) artist identifier</li>
+                <li><code>http://www.wikidata.org/entity/Q762</code> — External (Wikidata) Leonardo da Vinci identifier</li>
+            </ul>
+            <p>
+                All URIs are stable and persistent, enabling long-term citation and linking.
+            </p>
+
+            <h4>5.6.2 Principle 2: Resource Identification</h4>
+            <p>
+                <strong>Implementation:</strong> The system uses HTTP URIs as stable identifiers for all resources (artworks, artists, concepts). These URIs serve as persistent references in the RDF graph.
+            </p>
+
+            <h4>5.6.3 Principle 3: Provide RDF Descriptions</h4>
+            <p>
+                <strong>Implementation:</strong> The system maintains RDF data internally for complex queries and semantic reasoning. The primary interface for external consumers is JSON via the REST API.
+            </p>
+            <ul>
+                <li>RDF predicates use established vocabularies (DCTERMS, SKOS, OWL) with defined semantics.</li>
+                <li>Blank nodes are avoided where possible; all resources have HTTP URIs.</li>
+                <li>RDF triples are self-contained and can be merged with other RDF graphs without conflict.</li>
+            </ul>
+
+            <h4>5.6.4 Principle 4: Include Links to Other URIs</h4>
+            <p>
+                <strong>Implementation:</strong> Extensive use of URI linking enables navigation and integration:
+            </p>
+            <ul>
+                <li><code>dcterms:creator &lt;http://dbpedia.org/resource/...&gt;</code> — Links to external artist URIs</li>
+                <li><code>owl:sameAs &lt;http://www.wikidata.org/entity/...&gt;</code> — Establishes equivalence with external URIs</li>
+                <li><code>dcterms:subject &lt;http://vocab.getty.edu/aat/...&gt;</code> — References Getty AAT concepts</li>
+                <li><code>skos:exactMatch &lt;http://dbpedia.org/resource/...&gt;</code> — Provides concept mappings</li>
+            </ul>
+            <p>
+                These links enable follow-your-nose navigation and federated queries, fundamental to the semantic web.
+            </p>
+            </section>
+
+            <section id="section5.7">
+            <h3><span class="section-number">5.7</span> Caching and Performance Optimization</h3>
+            <p>
+                The system caches external data locally to reduce redundant API calls. The DBpediaArtist table stores enriched artist information with a <code>fetched_at</code> timestamp, enabling staleness detection. Cache TTL is set to 120 days for DBpedia data.
+            </p>
+
+            <h4>5.7.1 DBpedia Enrichment Cache</h4>
+            <p>
+                Artist biographical data from DBpedia is fetched via <code>dbpedia.py</code> and cached in the DBpediaArtist model. The caching strategy includes:
+            </p>
+            <ul>
+                <li><strong>Cache Storage:</strong> Relational database (SQLite) stores artist metadata with timestamps.</li>
+                <li><strong>TTL Management:</strong> Records older than 120 days are candidates for refresh.</li>
+            </ul>
+            </section>
+        </section>
+
+        <footer>
+            <p><strong>Document Version:</strong> 1.0 | <strong>Date:</strong> January 13, 2026</p>
+            <p>This report is part of the Artwork Provenance System technical documentation. For additional sections (REST APIs, RDF Knowledge Model, SPARQL Queries, Linked Data Principles), refer to accompanying technical documentation.</p>
+            <p><strong>Related Files:</strong> <code>provenance/artworks/models.py</code>, <code>api-specification/openapi.yaml</code>, <code>apache-jena-fuseki-5.6.0/run/configuration/provenance.ttl</code></p>
+        </footer>
+    </div>
+</body>
+</html>
